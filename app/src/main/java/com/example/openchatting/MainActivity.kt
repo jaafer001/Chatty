@@ -114,7 +114,12 @@ fun MainLogScreen(
             verticalArrangement = Arrangement.Center
         ) {
             Row(
-                modifier = Modifier.offset(0.dp, (-30).dp),
+                modifier = Modifier.offset(0.dp, (-30).dp)
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        clip = false
+                    ),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Box(
