@@ -193,6 +193,55 @@ fun MainLogScreen(
                     fontFamily = FontFamily.Cursive
                 )
             }
+            Row() {
+                Text(
+                    text = "Already have an account?",
+                    color = Color.Gray,
+                    fontSize = 24.sp,
+                    modifier = Modifier.padding(10.dp),
+                    fontFamily = FontFamily.Cursive
+                )
+                Text(
+                    text = "Log In",
+                    color = Color.Black,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(10.dp)
+                        .clickable(
+                            onClick = {}
+                        ),
+                    fontFamily = FontFamily.Cursive
+                )
+            }
+            Button(
+                onClick = { },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.White,
+                ),
+                border = BorderStroke(2.dp, Color.Black),
+                modifier = Modifier.padding(10.dp)
+                    .fillMaxWidth()
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        clip = false
+                    ),
+            ) {
+                Image(
+                    painter = painterResource(R.drawable.google),
+                    contentDescription = "Google Icon",
+                    modifier = Modifier.size(24.dp)
+                )
+                Text(
+                    "Continue with Google",
+                    textAlign = TextAlign.End,
+                    color = Color.Black,
+                    fontSize = 20.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    modifier = Modifier.padding(10.dp),
+                    fontFamily = FontFamily.Cursive
+                )
+            }
         }
     }
 
