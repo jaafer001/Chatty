@@ -183,6 +183,11 @@ fun MainLogScreen(
                 border = BorderStroke(2.dp, Color.Black),
                 modifier = Modifier.padding(10.dp)
                     .fillMaxWidth()
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(12.dp),
+                        clip = true
+                    ),
             ) {
                 Text(
                     "Sing Up",
