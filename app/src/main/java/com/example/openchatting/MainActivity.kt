@@ -122,11 +122,11 @@ fun MainLogScreen(
                         .width(50.dp)
                         .height(50.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Filled.Send,
-                        contentDescription = null,
-                        tint = Color.Black,
-                        modifier = Modifier.fillMaxSize(),
+                    val image = painterResource(R.drawable.chat_icon)
+                    Image(
+                        painter = image,
+                        contentDescription = "Chat Icon",
+                        modifier = Modifier.fillMaxSize()
                     )
                 }
                 Text(
