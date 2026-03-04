@@ -1,5 +1,6 @@
 package com.example.openchatting.screens
 
+import android.R.attr.textColor
 import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -88,7 +89,8 @@ val viewModel = LogIn()
 @Composable
 fun MainLogScreen(
     modifier: Modifier = Modifier,
-    onLoginSuccess: () -> Unit = {}
+    onLoginSuccess: () -> Unit = {},
+    onSignUpClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -195,7 +197,7 @@ fun MainLogScreen(
             Row {
                 Text(
                     text = "You don't have an account?",
-                    color = Color.Gray,
+                    color = Color.Black,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(10.dp),
                     fontFamily = FontFamily.Cursive
@@ -207,7 +209,7 @@ fun MainLogScreen(
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
                         .padding(10.dp)
-                        .clickable(onClick = onLoginSuccess),
+                        .clickable(onClick = onSignUpClick),
                     fontFamily = FontFamily.Cursive
                 )
             }

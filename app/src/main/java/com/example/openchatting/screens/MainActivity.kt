@@ -25,6 +25,19 @@ class MainActivity : ComponentActivity() {
                         MainLogScreen(
                             onLoginSuccess = {
                                 navController.navigate("chat_list")
+                            },
+                            onSignUpClick = {
+                                navController.navigate("signup")
+                            }
+                        )
+                    }
+                    composable("signup") {
+                        SignupScreenContent(
+                            onSignUpSuccess = {
+                                navController.navigate("chat_list")
+                            },
+                            onBackToLogin = {
+                                navController.popBackStack()
                             }
                         )
                     }
