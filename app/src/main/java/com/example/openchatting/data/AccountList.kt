@@ -30,12 +30,12 @@ object AccountList {
             name = "joe don't",
             profilePicture = R.drawable.user,
             lastMessage = "hhhhhh",
-            lastMessageTime = "12:00"
+            lastMessageTime = "14:23"
         ),Account(
             name = "Youness benAlla",
             profilePicture = R.drawable.user,
             lastMessage = "hahahaha",
-            lastMessageTime = "12:00"
+            lastMessageTime = "18:40"
         ),Account(
             name = "Adam benAlla",
             profilePicture = R.drawable.user,

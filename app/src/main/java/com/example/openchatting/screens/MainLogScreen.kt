@@ -90,10 +90,6 @@ fun MainLogScreen(
     modifier: Modifier = Modifier,
     onLoginSuccess: () -> Unit = {}
 ) {
-
-    var email = viewModel.email
-    var password = viewModel.password
-    var isPasswordVisible = viewModel.isPasswordVisible
     val context = LocalContext.current
 
     Box(
@@ -126,8 +122,8 @@ fun MainLogScreen(
                 )
             }
             MainInputField(
-                value = email,
-                onValueChange = { email = it },
+                value = viewModel.email,
+                onValueChange = { viewModel.email = it },
                 placeholder = "Email",
                 modifier = Modifier.padding(10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -140,12 +136,12 @@ fun MainLogScreen(
                 }
             )
             MainInputField(
-                value = password,
-                onValueChange = { password = it },
+                value = viewModel.password,
+                onValueChange = { viewModel.password = it },
                 placeholder = "Password",
                 modifier = Modifier.padding(10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 icon = {
                     Icon(
                         imageVector = Icons.Default.Lock,
@@ -154,10 +150,10 @@ fun MainLogScreen(
                     )
                 },
                 trailingIcon = {
-                    IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                    IconButton(onClick = { viewModel.isPasswordVisible = !viewModel.isPasswordVisible }) {
                         Icon(
-                            painter = painterResource(if (isPasswordVisible) R.drawable.hidden else R.drawable.eye),
-                            contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
+                            painter = painterResource(if (viewModel.isPasswordVisible) R.drawable.hidden else R.drawable.eye),
+                            contentDescription = if (viewModel.isPasswordVisible) "Hide password" else "Show password",
                             tint = Color.Black,
                             modifier = Modifier.size(26.dp)
                                 .offset(x = (-5).dp)
@@ -167,7 +163,7 @@ fun MainLogScreen(
             )
             Button(
                 onClick = {
-                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                    if (viewModel.email.isNotEmpty() && viewModel.password.isNotEmpty()) {
                         Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
                         onLoginSuccess()
                     } else {
