@@ -1,23 +1,21 @@
-package com.example.openchatting
+package com.example.openchatting.screens
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Button
@@ -35,33 +33,23 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
-        setContent {
-            Scaffold() {
-                MainLogScreen(modifier = Modifier.padding(it))
-            }
-        }
-    }
-}
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.platform.LocalContext
+import com.example.openchatting.R
+import com.example.openchatting.viewModel.LogIn
 
 @Composable
 fun MainInputField(
     modifier: Modifier = Modifier,
-    value: String?,
+    value: String,
     onValueChange: (String) -> Unit,
     placeholder: String,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
@@ -70,12 +58,14 @@ fun MainInputField(
     trailingIcon: @Composable (() -> Unit)? = null,
 ) {
     OutlinedTextField(
-        value = value ?: "",
+        value = value,
         onValueChange = onValueChange,
-        placeholder = { Text(
-            text = placeholder,
-            fontFamily = FontFamily.Cursive
-        ) },
+        placeholder = {
+            Text(
+                text = placeholder,
+                fontFamily = FontFamily.Cursive
+            )
+        },
         leadingIcon = icon,
         trailingIcon = trailingIcon,
         shape = CircleShape,
@@ -83,57 +73,49 @@ fun MainInputField(
         visualTransformation = visualTransformation,
         modifier = modifier.fillMaxWidth(),
         colors = OutlinedTextFieldDefaults.colors(
+            focusedTextColor = Color.Black,
+            unfocusedTextColor = Color.Black,
             focusedBorderColor = Color.Black,
-            unfocusedBorderColor = Color.Gray,
-            cursorColor = Color.Gray,
+            unfocusedBorderColor = Color.Black,
+            cursorColor = Color.Black,
             focusedLabelColor = Color.Black,
         ),
         maxLines = 1,
         singleLine = true,
     )
 }
-
+val viewModel = LogIn()
 @Composable
 fun MainLogScreen(
-    modifier: Modifier
-){
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }
+    modifier: Modifier = Modifier,
+    onLoginSuccess: () -> Unit = {}
+) {
 
+    var email = viewModel.email
+    var password = viewModel.password
+    var isPasswordVisible = viewModel.isPasswordVisible
+    val context = LocalContext.current
 
     Box(
-        modifier = Modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
             .padding(20.dp),
         contentAlignment = Alignment.Center
-    ){
+    ) {
         Column(
-            modifier = modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Row(
-                modifier = Modifier.offset(0.dp, (-30).dp)
-                    .shadow(
-                        elevation = 8.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        clip = false
-                    ),
+                modifier = Modifier.offset(y = (-30).dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Box(
-                    modifier = Modifier
-                        .width(50.dp)
-                        .height(50.dp)
-                ) {
-                    val image = painterResource(R.drawable.chat_icon)
-                    Image(
-                        painter = image,
-                        contentDescription = "Chat Icon",
-                        modifier = Modifier.fillMaxSize()
-                    )
-                }
+                Image(
+                    painter = painterResource(R.drawable.chat_icon),
+                    contentDescription = "Chat Icon",
+                    modifier = Modifier.size(50.dp)
+                )
                 Text(
                     text = "OpenChatting",
                     color = Color.Black,
@@ -141,12 +123,11 @@ fun MainLogScreen(
                     fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier.padding(start = 10.dp),
                     fontFamily = FontFamily.Cursive
-
                 )
             }
             MainInputField(
                 value = email,
-                onValueChange = {email = it},
+                onValueChange = { email = it },
                 placeholder = "Email",
                 modifier = Modifier.padding(10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
@@ -160,37 +141,54 @@ fun MainLogScreen(
             )
             MainInputField(
                 value = password,
-                onValueChange = {password = it},
+                onValueChange = { password = it },
                 placeholder = "Password",
                 modifier = Modifier.padding(10.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = if (isPasswordVisible) KeyboardType.Text else KeyboardType.Password),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                 icon = {
+                    Icon(
+                        imageVector = Icons.Default.Lock,
+                        contentDescription = null,
+                        tint = Color.Black,
+                    )
+                },
+                trailingIcon = {
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                         Icon(
-                            imageVector = Icons.Default.Lock,
+                            painter = painterResource(if (isPasswordVisible) R.drawable.hidden else R.drawable.eye),
                             contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
-                            tint = if (isPasswordVisible) Color.Gray else Color.Black
+                            tint = Color.Black,
+                            modifier = Modifier.size(26.dp)
+                                .offset(x = (-5).dp)
                         )
                     }
-                },
+                }
             )
             Button(
-                onClick = { },
+                onClick = {
+                    if (email.isNotEmpty() && password.isNotEmpty()) {
+                        Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                        onLoginSuccess()
+                    } else {
+                        Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
+                    }
+                },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.White,
                 ),
                 border = BorderStroke(2.dp, Color.Black),
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier
+                    .padding(10.dp)
                     .fillMaxWidth()
                     .shadow(
-                        elevation = 8.dp,
+                        elevation = 4.dp,
                         shape = RoundedCornerShape(12.dp),
-                        clip = true
+                        clip = false
                     ),
             ) {
                 Text(
-                    "Sing Up",
+                    "Sign In",
                     color = Color.Black,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
@@ -198,23 +196,22 @@ fun MainLogScreen(
                     fontFamily = FontFamily.Cursive
                 )
             }
-            Row() {
+            Row {
                 Text(
-                    text = "Already have an account?",
+                    text = "You don't have an account?",
                     color = Color.Gray,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     modifier = Modifier.padding(10.dp),
                     fontFamily = FontFamily.Cursive
                 )
                 Text(
-                    text = "Log In",
+                    text = "Sign Up",
                     color = Color.Black,
-                    fontSize = 24.sp,
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(10.dp)
-                        .clickable(
-                            onClick = {}
-                        ),
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .clickable(onClick = onLoginSuccess),
                     fontFamily = FontFamily.Cursive
                 )
             }
@@ -224,10 +221,11 @@ fun MainLogScreen(
                     containerColor = Color.White,
                 ),
                 border = BorderStroke(2.dp, Color.Black),
-                modifier = Modifier.padding(10.dp)
+                modifier = Modifier
+                    .padding(10.dp)
                     .fillMaxWidth()
                     .shadow(
-                        elevation = 8.dp,
+                        elevation = 4.dp,
                         shape = RoundedCornerShape(12.dp),
                         clip = false
                     ),
@@ -249,15 +247,15 @@ fun MainLogScreen(
             }
         }
     }
-
 }
+
 @Preview(
     showBackground = true,
     showSystemUi = true
 )
 @Composable
-fun MainLogPreview(){
-    Scaffold() {
-        MainLogScreen(modifier = Modifier.padding(it))
+fun MainLogPreview() {
+    Scaffold { padding ->
+        MainLogScreen(modifier = Modifier.padding(padding))
     }
 }

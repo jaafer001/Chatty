@@ -12,9 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OpenChatting">
         <activity
-            android:name=".MainActivity"
+            android:name=".screens.ChatListScreen"
+            android:exported="false"
+            android:label="@string/title_activity_chat_list_screen"
+            android:theme="@style/Theme.OpenChatting" />
+        <activity
+            android:name=".screens.MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.OpenChatting">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

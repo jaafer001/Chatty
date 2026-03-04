@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Chatty</string>
     <string name="title_activity_log_in">LogIn</string>
+    <string name="title_activity_chat_list_screen">ChatListScreen</string>
 </resources>
