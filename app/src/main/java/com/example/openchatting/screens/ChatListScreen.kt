@@ -15,6 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
+
+@Composable
+fun ChatListScreenContent() {
+    ChatList(
+        accountList = AccountList.accountList,
+    )
+}
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChatList(
     accountList: List<Account>
