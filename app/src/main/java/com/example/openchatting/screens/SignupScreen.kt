@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
@@ -32,6 +33,7 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -66,6 +68,14 @@ fun SignupScreenContent(
     val buttonTextColor = if (isDarkMode) Color.White else Color.Black
     val buttonBorderColor = if (isDarkMode) Color.White else Color.Black
     val buttonBackgroundColor = if (isDarkMode) Color(0xFF1E1E1E) else Color.White
+
+    // Show error message if any
+    signUpViewModel.errorMessage?.let { error ->
+        androidx.compose.runtime.LaunchedEffect(error) {
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            signUpViewModel.clearError()
+        }
+    }
 
     Box(
         modifier = modifier
@@ -217,36 +227,18 @@ fun SignupScreenContent(
             // Sign Up Button
             Button(
                 onClick = {
-                    when {
-                        signUpViewModel.username.isEmpty() || signUpViewModel.email.isEmpty() ||
-                        signUpViewModel.password.isEmpty() || signUpViewModel.confirmPassword.isEmpty() ||
-                        signUpViewModel.phoneNumber.isEmpty() -> {
-                            Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
-                        }
-                        signUpViewModel.password != signUpViewModel.confirmPassword -> {
-                            Toast.makeText(context, "Passwords do not match", Toast.LENGTH_SHORT).show()
-                        }
-                        signUpViewModel.password.length < 6 -> {
-                            Toast.makeText(context, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show()
-                        }
-                        !signUpViewModel.email.contains("@") -> {
-                            Toast.makeText(context, "Invalid email format", Toast.LENGTH_SHORT).show()
-                        }
-                        signUpViewModel.phoneNumber.length < 10 -> {
-                            Toast.makeText(context, "Phone number must be at least 10 digits", Toast.LENGTH_SHORT).show()
-                        }
-                        else -> {
-                            Toast.makeText(context, "Account created successfully!", Toast.LENGTH_SHORT).show()
-                            // Clear form
-                            signUpViewModel.username = ""
-                            signUpViewModel.email = ""
-                            signUpViewModel.password = ""
-                            signUpViewModel.confirmPassword = ""
-                            signUpViewModel.phoneNumber = ""
-                            onSignUpSuccess()
-                        }
+                    signUpViewModel.signUp { user ->
+                        Toast.makeText(context, "Account created successfully! Welcome ${user.email}!", Toast.LENGTH_SHORT).show()
+                        // Clear form
+                        signUpViewModel.username = ""
+                        signUpViewModel.email = ""
+                        signUpViewModel.password = ""
+                        signUpViewModel.confirmPassword = ""
+                        signUpViewModel.phoneNumber = ""
+                        onSignUpSuccess()
                     }
                 },
+                enabled = !signUpViewModel.isLoading,
                 colors = ButtonDefaults.buttonColors(
                     containerColor = buttonBackgroundColor,
                 ),
@@ -260,14 +252,21 @@ fun SignupScreenContent(
                         clip = false
                     ),
             ) {
-                Text(
-                    "Sign Up",
-                    color = buttonTextColor,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(10.dp),
-                    fontFamily = FontFamily.Cursive
-                )
+                if (signUpViewModel.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = buttonTextColor
+                    )
+                } else {
+                    Text(
+                        "Sign Up",
+                        color = buttonTextColor,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.padding(10.dp),
+                        fontFamily = FontFamily.Cursive
+                    )
+                }
             }
             Row(
                 modifier = Modifier.padding(top = 15.dp),
@@ -349,4 +348,3 @@ fun SignupInputField(
 fun SignupScreenPreview() {
     SignupScreenContent()
 }
-

@@ -46,6 +46,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.platform.LocalContext
 import com.example.openchatting.R
 import com.example.openchatting.viewModel.LogIn
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.runtime.LaunchedEffect
 
 @Composable
 fun MainInputField(
@@ -93,6 +96,20 @@ fun MainLogScreen(
     onSignUpClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
+    val isDarkMode = isSystemInDarkTheme()
+    val textColor = if (isDarkMode) Color.White else Color.Black
+    val secondaryTextColor = if (isDarkMode) Color.LightGray else Color.Gray
+    val buttonTextColor = if (isDarkMode) Color.White else Color.Black
+    val buttonBorderColor = if (isDarkMode) Color.White else Color.Black
+    val buttonBackgroundColor = if (isDarkMode) Color(0xFF1E1E1E) else Color.White
+
+    // Show error message if any
+    viewModel.errorMessage?.let { error ->
+        LaunchedEffect(error) {
+            Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
+            viewModel.clearError()
+        }
+    }
 
     Box(
         modifier = modifier
@@ -101,25 +118,29 @@ fun MainLogScreen(
         contentAlignment = Alignment.Center
     ) {
         Column(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(top = 20.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Row(
-                modifier = Modifier.offset(y = (-30).dp),
+                modifier = Modifier
+                    .offset(y = (-20).dp)
+                    .padding(bottom = 10.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Image(
                     painter = painterResource(R.drawable.chat_icon),
                     contentDescription = "Chat Icon",
-                    modifier = Modifier.size(50.dp)
+                    modifier = Modifier.size(40.dp)
                 )
                 Text(
                     text = "OpenChatting",
-                    color = Color.Black,
-                    fontSize = 30.sp,
+                    color = textColor,
+                    fontSize = 24.sp,
                     fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(start = 10.dp),
+                    modifier = Modifier.padding(start = 8.dp),
                     fontFamily = FontFamily.Cursive
                 )
             }
@@ -133,7 +154,7 @@ fun MainLogScreen(
                     Icon(
                         imageVector = Icons.Default.Email,
                         contentDescription = null,
-                        tint = Color.Black,
+                        tint = textColor,
                     )
                 }
             )
@@ -148,7 +169,7 @@ fun MainLogScreen(
                     Icon(
                         imageVector = Icons.Default.Lock,
                         contentDescription = null,
-                        tint = Color.Black,
+                        tint = textColor,
                     )
                 },
                 trailingIcon = {
@@ -156,7 +177,7 @@ fun MainLogScreen(
                         Icon(
                             painter = painterResource(if (viewModel.isPasswordVisible) R.drawable.hidden else R.drawable.eye),
                             contentDescription = if (viewModel.isPasswordVisible) "Hide password" else "Show password",
-                            tint = Color.Black,
+                            tint = textColor,
                             modifier = Modifier.size(26.dp)
                                 .offset(x = (-5).dp)
                         )
@@ -165,17 +186,16 @@ fun MainLogScreen(
             )
             Button(
                 onClick = {
-                    if (viewModel.email.isNotEmpty() && viewModel.password.isNotEmpty()) {
-                        Toast.makeText(context, "Login successful!", Toast.LENGTH_SHORT).show()
+                    viewModel.signIn { user ->
+                        Toast.makeText(context, "Welcome ${user.email}!", Toast.LENGTH_SHORT).show()
                         onLoginSuccess()
-                    } else {
-                        Toast.makeText(context, "Please fill all fields", Toast.LENGTH_SHORT).show()
                     }
                 },
+                enabled = !viewModel.isLoading,
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
+                    containerColor = buttonBackgroundColor,
                 ),
-                border = BorderStroke(2.dp, Color.Black),
+                border = BorderStroke(2.dp, buttonBorderColor),
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth()
@@ -185,26 +205,33 @@ fun MainLogScreen(
                         clip = false
                     ),
             ) {
-                Text(
-                    "Sign In",
-                    color = Color.Black,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(10.dp),
-                    fontFamily = FontFamily.Cursive
-                )
+                if (viewModel.isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = buttonTextColor
+                    )
+                } else {
+                    Text(
+                        "Sign In",
+                        color = buttonTextColor,
+                        fontSize = 20.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                        modifier = Modifier.padding(10.dp),
+                        fontFamily = FontFamily.Cursive
+                    )
+                }
             }
             Row {
                 Text(
                     text = "You don't have an account?",
-                    color = Color.Black,
+                    color = secondaryTextColor,
                     fontSize = 20.sp,
                     modifier = Modifier.padding(10.dp),
                     fontFamily = FontFamily.Cursive
                 )
                 Text(
                     text = "Sign Up",
-                    color = Color.Black,
+                    color = textColor,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier
@@ -216,9 +243,9 @@ fun MainLogScreen(
             Button(
                 onClick = { },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.White,
+                    containerColor = buttonBackgroundColor,
                 ),
-                border = BorderStroke(2.dp, Color.Black),
+                border = BorderStroke(2.dp, buttonBorderColor),
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth()
@@ -236,7 +263,7 @@ fun MainLogScreen(
                 Text(
                     "Continue with Google",
                     textAlign = TextAlign.End,
-                    color = Color.Black,
+                    color = buttonTextColor,
                     fontSize = 20.sp,
                     fontWeight = FontWeight.ExtraBold,
                     modifier = Modifier.padding(10.dp),
