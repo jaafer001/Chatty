@@ -1,94 +1,41 @@
 package com.example.openchatting.screens
 
-import android.R.attr.textColor
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material3.Button
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.platform.LocalContext
-import com.example.openchatting.R
+import com.example.openchatting.ui.theme.PrimaryBlue
+import com.example.openchatting.ui.theme.SecondaryTeal
 import com.example.openchatting.viewModel.LogIn
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.runtime.LaunchedEffect
 
-@Composable
-fun MainInputField(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    icon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = {
-            Text(
-                text = placeholder,
-                fontFamily = FontFamily.Cursive
-            )
-        },
-        leadingIcon = icon,
-        trailingIcon = trailingIcon,
-        shape = CircleShape,
-        keyboardOptions = keyboardOptions,
-        visualTransformation = visualTransformation,
-        modifier = modifier.fillMaxWidth(),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = Color.Black,
-            unfocusedTextColor = Color.Black,
-            focusedBorderColor = Color.Black,
-            unfocusedBorderColor = Color.Black,
-            cursorColor = Color.Black,
-            focusedLabelColor = Color.Black,
-        ),
-        maxLines = 1,
-        singleLine = true,
-    )
-}
-val viewModel = LogIn()
+private val viewModel = LogIn()
+
 @Composable
 fun MainLogScreen(
     modifier: Modifier = Modifier,
@@ -96,14 +43,10 @@ fun MainLogScreen(
     onSignUpClick: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val isDarkMode = isSystemInDarkTheme()
-    val textColor = if (isDarkMode) Color.White else Color.Black
-    val secondaryTextColor = if (isDarkMode) Color.LightGray else Color.Gray
-    val buttonTextColor = if (isDarkMode) Color.White else Color.Black
-    val buttonBorderColor = if (isDarkMode) Color.White else Color.Black
-    val buttonBackgroundColor = if (isDarkMode) Color(0xFF1E1E1E) else Color.White
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val textColor = MaterialTheme.colorScheme.onBackground
+    val secondaryTextColor = MaterialTheme.colorScheme.onSurfaceVariant
 
-    // Show error message if any
     viewModel.errorMessage?.let { error ->
         LaunchedEffect(error) {
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
@@ -114,173 +57,209 @@ fun MainLogScreen(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(20.dp),
-        contentAlignment = Alignment.Center
+            .background(backgroundColor)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 20.dp),
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Row(
+            Spacer(modifier = Modifier.height(40.dp))
+
+            // Header with gradient
+            Box(
                 modifier = Modifier
-                    .offset(y = (-20).dp)
-                    .padding(bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(PrimaryBlue, SecondaryTeal)
+                        )
+                    ),
+                contentAlignment = Alignment.Center
             ) {
-                Image(
-                    painter = painterResource(R.drawable.chat_icon),
-                    contentDescription = "Chat Icon",
-                    modifier = Modifier.size(40.dp)
-                )
                 Text(
-                    text = "OpenChatting",
-                    color = textColor,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(start = 8.dp),
-                    fontFamily = FontFamily.Cursive
+                    "💬",
+                    fontSize = 48.sp,
+                    color = Color.White
                 )
             }
-            MainInputField(
+
+            Text(
+                text = "Welcome Back!",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = textColor
+            )
+
+            Text(
+                text = "Sign in to your account",
+                fontSize = 16.sp,
+                color = secondaryTextColor
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Email Field
+            ModernTextField(
                 value = viewModel.email,
                 onValueChange = { viewModel.email = it },
-                placeholder = "Email",
-                modifier = Modifier.padding(10.dp),
+                placeholder = "Email Address",
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null,
-                        tint = textColor,
-                    )
-                }
+                icon = Icons.Default.Email
             )
-            MainInputField(
+
+            // Password Field
+            ModernTextField(
                 value = viewModel.password,
                 onValueChange = { viewModel.password = it },
                 placeholder = "Password",
-                modifier = Modifier.padding(10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (viewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = textColor,
-                    )
-                },
+                icon = Icons.Default.Lock,
                 trailingIcon = {
-                    IconButton(onClick = { viewModel.isPasswordVisible = !viewModel.isPasswordVisible }) {
-                        Icon(
-                            painter = painterResource(if (viewModel.isPasswordVisible) R.drawable.hidden else R.drawable.eye),
-                            contentDescription = if (viewModel.isPasswordVisible) "Hide password" else "Show password",
-                            tint = textColor,
-                            modifier = Modifier.size(26.dp)
-                                .offset(x = (-5).dp)
-                        )
+                    IconButton(
+                        onClick = { viewModel.isPasswordVisible = !viewModel.isPasswordVisible },
+                        modifier = Modifier.size(48.dp)
+                    ) {
+                        Text(if (viewModel.isPasswordVisible) "👁️" else "👁️‍🗨️", fontSize = 18.sp)
                     }
                 }
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Login Button with gradient
             Button(
                 onClick = {
-                    viewModel.signIn { user ->
-                        Toast.makeText(context, "Welcome ${user.email}!", Toast.LENGTH_SHORT).show()
+                    viewModel.signIn { email ->
+                        Toast.makeText(context, "Welcome $email!", Toast.LENGTH_SHORT).show()
                         onLoginSuccess()
                     }
                 },
                 enabled = !viewModel.isLoading,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonBackgroundColor,
-                ),
-                border = BorderStroke(2.dp, buttonBorderColor),
                 modifier = Modifier
-                    .padding(10.dp)
                     .fillMaxWidth()
-                    .shadow(
-                        elevation = 4.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        clip = false
-                    ),
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    disabledContainerColor = Color.Gray
+                ),
+                contentPadding = PaddingValues(0.dp)
             ) {
-                if (viewModel.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = buttonTextColor
-                    )
-                } else {
-                    Text(
-                        "Sign In",
-                        color = buttonTextColor,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.padding(10.dp),
-                        fontFamily = FontFamily.Cursive
-                    )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(PrimaryBlue, SecondaryTeal)
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (viewModel.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            "Sign In",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 }
             }
-            Row {
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Sign Up Link
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
                 Text(
-                    text = "You don't have an account?",
-                    color = secondaryTextColor,
-                    fontSize = 20.sp,
-                    modifier = Modifier.padding(10.dp),
-                    fontFamily = FontFamily.Cursive
+                    "Don't have an account? ",
+                    fontSize = 14.sp,
+                    color = secondaryTextColor
                 )
                 Text(
-                    text = "Sign Up",
-                    color = textColor,
-                    fontSize = 20.sp,
+                    "Sign Up",
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(10.dp)
-                        .clickable(onClick = onSignUpClick),
-                    fontFamily = FontFamily.Cursive
+                    color = PrimaryBlue,
+                    modifier = Modifier.clickable(
+                        interactionSource = remember { MutableInteractionSource() },
+                        indication = null,
+                        onClick = onSignUpClick
+                    )
                 )
             }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Divider
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(Color.Gray.copy(alpha = 0.3f))
+                )
+                Text("Or", fontSize = 12.sp, color = secondaryTextColor)
+                Box(
+                    modifier = Modifier
+                        .weight(1f)
+                        .height(1.dp)
+                        .background(Color.Gray.copy(alpha = 0.3f))
+                )
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Google Button
             Button(
                 onClick = { },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonBackgroundColor,
-                ),
-                border = BorderStroke(2.dp, buttonBorderColor),
                 modifier = Modifier
-                    .padding(10.dp)
                     .fillMaxWidth()
-                    .shadow(
-                        elevation = 4.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        clip = false
-                    ),
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.google),
-                    contentDescription = "Google Icon",
-                    modifier = Modifier.size(24.dp)
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                colors = ButtonDefaults.outlinedButtonColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    contentColor = textColor
                 )
-                Text(
-                    "Continue with Google",
-                    textAlign = TextAlign.End,
-                    color = buttonTextColor,
-                    fontSize = 20.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(10.dp),
-                    fontFamily = FontFamily.Cursive
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.Center,
+                    verticalAlignment = Alignment.CenterVertically,
+                    content = {
+                        Text("🔐  Continue with Google", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                    }
                 )
             }
+
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 }
 
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
+@Preview(showBackground = true)
 @Composable
-fun MainLogPreview() {
-    Scaffold { padding ->
-        MainLogScreen(modifier = Modifier.padding(padding))
-    }
+fun MainLogScreenPreview() {
+    MainLogScreen()
 }

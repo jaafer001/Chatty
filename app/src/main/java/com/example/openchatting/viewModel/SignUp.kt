@@ -5,11 +5,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.openchatting.utils.FirebaseAuthHelper
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
-@Suppress("UNUSED_PARAMETER", "unused")
 class SignUp: ViewModel() {
     var username by mutableStateOf("")
     var email by mutableStateOf("")
@@ -21,9 +19,10 @@ class SignUp: ViewModel() {
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
 
-    private val firebaseAuthHelper = FirebaseAuthHelper()
+    // Temporarily disabled Firebase
+    // private val firebaseAuthHelper = FirebaseAuthHelper()
 
-    fun signUp(onSuccess: (FirebaseUser) -> Unit) {
+    fun signUp(onSuccess: (String) -> Unit) {
         // Validation
         when {
             username.isEmpty() || email.isEmpty() || password.isEmpty() ||
@@ -53,12 +52,9 @@ class SignUp: ViewModel() {
             isLoading = true
             errorMessage = null
 
-            val result = firebaseAuthHelper.signUp(email, password)
-            result.onSuccess { user ->
-                onSuccess(user)
-            }.onFailure { exception ->
-                errorMessage = exception.localizedMessage ?: "Sign up failed"
-            }
+            // Temporarily simulate signup
+            delay(1000)
+            onSuccess(email)
 
             isLoading = false
         }

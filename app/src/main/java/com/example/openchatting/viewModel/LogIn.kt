@@ -5,9 +5,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.openchatting.utils.FirebaseAuthHelper
-import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 
 class LogIn: ViewModel() {
     var email by mutableStateOf("")
@@ -16,9 +15,10 @@ class LogIn: ViewModel() {
     var isLoading by mutableStateOf(false)
     var errorMessage by mutableStateOf<String?>(null)
 
-    private val firebaseAuthHelper = FirebaseAuthHelper()
+    // Temporarily disabled Firebase
+    // private val firebaseAuthHelper = FirebaseAuthHelper()
 
-    fun signIn(onSuccess: (FirebaseUser) -> Unit) {
+    fun signIn(onSuccess: (String) -> Unit) {
         if (email.isEmpty() || password.isEmpty()) {
             errorMessage = "Please fill all fields"
             return
@@ -28,12 +28,9 @@ class LogIn: ViewModel() {
             isLoading = true
             errorMessage = null
 
-            val result = firebaseAuthHelper.signIn(email, password)
-            result.onSuccess { user ->
-                onSuccess(user)
-            }.onFailure { exception ->
-                errorMessage = exception.localizedMessage ?: "Sign in failed"
-            }
+            // Temporarily simulate login
+            delay(1000)
+            onSuccess(email)
 
             isLoading = false
         }

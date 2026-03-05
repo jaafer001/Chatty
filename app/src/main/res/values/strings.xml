@@ -2,4 +2,6 @@
     <string name="app_name">Chatty</string>
     <string name="title_activity_log_in">LogIn</string>
     <string name="title_activity_chat_list_screen">ChatListScreen</string>
+    <string name="web_server_client">496782395732-8v3ek9okcp2bd2qkjtu4ihfsdgg6u88d.apps.googleusercontent.com</string>
+    <string name="title_activity_settings_screen">settingsScreen</string>
 </resources>

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "YOUR_PROJECT_NUMBER",
-    "project_id": "your-project-id",
-    "storage_bucket": "your-project-id.appspot.com"
+    "project_number": "496782395732",
+    "project_id": "chatty-89df3",
+    "storage_bucket": "chatty-89df3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:YOUR_PROJECT_NUMBER:android:YOUR_APP_ID",
+        "mobilesdk_app_id": "1:496782395732:android:a44ecad33835063c3160c1",
         "android_client_info": {
           "package_name": "com.example.openchatting"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "YOUR_API_KEY"
+          "current_key": "AIzaSyBtuR82LRuJIVKrehZkePlDiUndYoU1pDQ"
         }
       ],
       "services": {

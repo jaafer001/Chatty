@@ -1,77 +1,56 @@
 package com.example.openchatting.screens
 
 import android.widget.Toast
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.ui.platform.LocalContext
-import com.example.openchatting.R
+import com.example.openchatting.ui.theme.PrimaryBlue
+import com.example.openchatting.ui.theme.SecondaryTeal
 import com.example.openchatting.viewModel.SignUp
 
-val signUpViewModel = SignUp()
+private val signUpViewModel = SignUp()
 
 @Composable
-fun SignupScreenContent(
+fun SignupScreen(
     modifier: Modifier = Modifier,
     onSignUpSuccess: () -> Unit = {},
     onBackToLogin: () -> Unit = {}
 ) {
     val context = LocalContext.current
-    val isDarkMode = isSystemInDarkTheme()
-    val textColor = if (isDarkMode) Color.White else Color.Black
-    val secondaryTextColor = if (isDarkMode) Color.LightGray else Color.Gray
-    val buttonTextColor = if (isDarkMode) Color.White else Color.Black
-    val buttonBorderColor = if (isDarkMode) Color.White else Color.Black
-    val buttonBackgroundColor = if (isDarkMode) Color(0xFF1E1E1E) else Color.White
+    val backgroundColor = MaterialTheme.colorScheme.background
+    val textColor = MaterialTheme.colorScheme.onBackground
+    val secondaryTextColor = MaterialTheme.colorScheme.onSurfaceVariant
 
-    // Show error message if any
     signUpViewModel.errorMessage?.let { error ->
-        androidx.compose.runtime.LaunchedEffect(error) {
+        LaunchedEffect(error) {
             Toast.makeText(context, error, Toast.LENGTH_SHORT).show()
             signUpViewModel.clearError()
         }
@@ -80,271 +59,170 @@ fun SignupScreenContent(
     Box(
         modifier = modifier
             .fillMaxSize()
-            .padding(20.dp),
-        contentAlignment = Alignment.Center
+            .background(backgroundColor)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(top = 20.dp, bottom = 20.dp),
+                .padding(horizontal = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            Row(
-                modifier = Modifier
-                    .offset(y = (-20).dp)
-                    .padding(bottom = 10.dp),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Image(
-                    painter = painterResource(R.drawable.chat_icon),
-                    contentDescription = "Chat Icon",
-                    modifier = Modifier.size(40.dp)
-                )
-                Text(
-                    text = "OpenChatting",
-                    color = textColor,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.ExtraBold,
-                    modifier = Modifier.padding(start = 8.dp),
-                    fontFamily = FontFamily.Cursive
-                )
-            }
+            Spacer(modifier = Modifier.height(32.dp))
 
+            // Header
             Text(
-                text = "Create Your Account",
-                color = textColor,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                fontFamily = FontFamily.Cursive,
-                modifier = Modifier.padding(bottom = 20.dp)
+                text = "Create Account",
+                fontSize = 32.sp,
+                fontWeight = FontWeight.ExtraBold,
+                color = textColor
             )
 
-            // Username Field
-            SignupInputField(
+            Text(
+                text = "Join us to start chatting",
+                fontSize = 16.sp,
+                color = secondaryTextColor
+            )
+
+            Spacer(modifier = Modifier.height(8.dp))
+
+            // Username
+            ModernTextField(
                 value = signUpViewModel.username,
                 onValueChange = { signUpViewModel.username = it },
                 placeholder = "Username",
-                modifier = Modifier.padding(10.dp),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        tint = textColor,
-                    )
-                }
+                icon = Icons.Default.Person
             )
 
-            // Email Field
-            SignupInputField(
+            // Email
+            ModernTextField(
                 value = signUpViewModel.email,
                 onValueChange = { signUpViewModel.email = it },
-                placeholder = "Email",
-                modifier = Modifier.padding(10.dp),
+                placeholder = "Email Address",
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Email,
-                        contentDescription = null,
-                        tint = textColor,
-                    )
-                }
+                icon = Icons.Default.Email
             )
 
-            // Phone Number Field
-            SignupInputField(
+            // Phone
+            ModernTextField(
                 value = signUpViewModel.phoneNumber,
                 onValueChange = { signUpViewModel.phoneNumber = it },
                 placeholder = "Phone Number",
-                modifier = Modifier.padding(10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Phone,
-                        contentDescription = null,
-                        tint = textColor,
-                    )
-                }
+                icon = Icons.Default.Phone
             )
 
-            // Password Field
-            SignupInputField(
+            // Password
+            ModernTextField(
                 value = signUpViewModel.password,
                 onValueChange = { signUpViewModel.password = it },
                 placeholder = "Password",
-                modifier = Modifier.padding(10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (signUpViewModel.isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = textColor,
-                    )
-                },
+                icon = Icons.Default.Lock,
                 trailingIcon = {
                     IconButton(onClick = { signUpViewModel.isPasswordVisible = !signUpViewModel.isPasswordVisible }) {
-                        Icon(
-                            painter = painterResource(if (signUpViewModel.isPasswordVisible) R.drawable.hidden else R.drawable.eye),
-                            contentDescription = if (signUpViewModel.isPasswordVisible) "Hide password" else "Show password",
-                            tint = textColor,
-                            modifier = Modifier.size(26.dp)
-                                .offset(x = (-5).dp)
-                        )
+                        Text(if (signUpViewModel.isPasswordVisible) "👁️" else "👁️‍🗨️", fontSize = 18.sp)
                     }
                 }
             )
 
-            // Confirm Password Field
-            SignupInputField(
+            // Confirm Password
+            ModernTextField(
                 value = signUpViewModel.confirmPassword,
                 onValueChange = { signUpViewModel.confirmPassword = it },
                 placeholder = "Confirm Password",
-                modifier = Modifier.padding(10.dp),
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
                 visualTransformation = if (signUpViewModel.isConfirmPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-                icon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = textColor,
-                    )
-                },
+                icon = Icons.Default.Lock,
                 trailingIcon = {
                     IconButton(onClick = { signUpViewModel.isConfirmPasswordVisible = !signUpViewModel.isConfirmPasswordVisible }) {
-                        Icon(
-                            painter = painterResource(if (signUpViewModel.isConfirmPasswordVisible) R.drawable.hidden else R.drawable.eye),
-                            contentDescription = if (signUpViewModel.isConfirmPasswordVisible) "Hide password" else "Show password",
-                            tint = textColor,
-                            modifier = Modifier.size(26.dp)
-                                .offset(x = (-5).dp)
-                        )
+                        Text(if (signUpViewModel.isConfirmPasswordVisible) "👁️" else "👁️‍🗨️", fontSize = 18.sp)
                     }
                 }
             )
+
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Sign Up Button
             Button(
                 onClick = {
-                    signUpViewModel.signUp { user ->
-                        Toast.makeText(context, "Account created successfully! Welcome ${user.email}!", Toast.LENGTH_SHORT).show()
-                        // Clear form
-                        signUpViewModel.username = ""
-                        signUpViewModel.email = ""
-                        signUpViewModel.password = ""
-                        signUpViewModel.confirmPassword = ""
-                        signUpViewModel.phoneNumber = ""
+                    signUpViewModel.signUp { email ->
+                        Toast.makeText(context, "Welcome $email!", Toast.LENGTH_SHORT).show()
                         onSignUpSuccess()
                     }
                 },
                 enabled = !signUpViewModel.isLoading,
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = buttonBackgroundColor,
-                ),
-                border = BorderStroke(2.dp, buttonBorderColor),
                 modifier = Modifier
-                    .padding(10.dp)
                     .fillMaxWidth()
-                    .shadow(
-                        elevation = 4.dp,
-                        shape = RoundedCornerShape(12.dp),
-                        clip = false
-                    ),
+                    .height(56.dp)
+                    .clip(RoundedCornerShape(16.dp))
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    disabledContainerColor = Color.Gray
+                ),
+                contentPadding = PaddingValues(0.dp)
             ) {
-                if (signUpViewModel.isLoading) {
-                    CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
-                        color = buttonTextColor
-                    )
-                } else {
-                    Text(
-                        "Sign Up",
-                        color = buttonTextColor,
-                        fontSize = 20.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.padding(10.dp),
-                        fontFamily = FontFamily.Cursive
-                    )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.linearGradient(
+                                colors = listOf(PrimaryBlue, SecondaryTeal)
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    if (signUpViewModel.isLoading) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(24.dp),
+                            color = Color.White,
+                            strokeWidth = 2.dp
+                        )
+                    } else {
+                        Text(
+                            "Sign Up",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
                 }
             }
+
+            // Login Link
             Row(
-                modifier = Modifier.padding(top = 15.dp),
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = "Already have an account?",
-                    color = secondaryTextColor,
-                    fontSize = 16.sp,
-                    modifier = Modifier.padding(5.dp),
-                    fontFamily = FontFamily.Cursive
+                    "Already have an account? ",
+                    fontSize = 14.sp,
+                    color = secondaryTextColor
                 )
                 Text(
-                    text = "Log In",
-                    color = textColor,
-                    fontSize = 16.sp,
+                    "Log In",
+                    fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .padding(5.dp)
-                        .clickable(onClick = onBackToLogin),
-                    fontFamily = FontFamily.Cursive
+                    color = PrimaryBlue,
+                    modifier = Modifier.clickable(
+                        indication = null,
+                        interactionSource = MutableInteractionSource(),
+                        onClick = onBackToLogin
+                    )
                 )
             }
+
+            Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
 
-@Composable
-fun SignupInputField(
-    modifier: Modifier = Modifier,
-    value: String,
-    onValueChange: (String) -> Unit,
-    placeholder: String,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    visualTransformation: VisualTransformation = VisualTransformation.None,
-    icon: @Composable (() -> Unit)? = null,
-    trailingIcon: @Composable (() -> Unit)? = null,
-) {
-    val isDarkMode = isSystemInDarkTheme()
-    val textColor = if (isDarkMode) Color.White else Color.Black
-    val placeholderColor = if (isDarkMode) Color.LightGray else Color.Gray
-    val borderColor = if (isDarkMode) Color.White else Color.Black
-    val cursorColor = if (isDarkMode) Color.White else Color.Black
-
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = {
-            Text(
-                text = placeholder,
-                fontFamily = FontFamily.Cursive,
-                color = placeholderColor
-            )
-        },
-        leadingIcon = icon,
-        trailingIcon = trailingIcon,
-        shape = CircleShape,
-        keyboardOptions = keyboardOptions,
-        visualTransformation = visualTransformation,
-        modifier = modifier.fillMaxWidth(),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = textColor,
-            unfocusedTextColor = textColor,
-            focusedBorderColor = borderColor,
-            unfocusedBorderColor = borderColor,
-            cursorColor = cursorColor,
-            focusedLabelColor = borderColor,
-        ),
-        maxLines = 1,
-        singleLine = true,
-    )
-}
-
-@Preview(
-    showBackground = true,
-    showSystemUi = true
-)
+@Preview(showBackground = true)
 @Composable
 fun SignupScreenPreview() {
-    SignupScreenContent()
+    SignupScreen()
 }
