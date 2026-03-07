@@ -69,39 +69,43 @@ fun MainLogScreen(
         ) {
             Spacer(modifier = Modifier.height(40.dp))
 
-            // Header with gradient
+            // Header with enhanced gradient
             Box(
                 modifier = Modifier
-                    .size(100.dp)
-                    .clip(RoundedCornerShape(24.dp))
+                    .size(120.dp)
+                    .clip(RoundedCornerShape(30.dp))
+                    .shadow(elevation = 12.dp, shape = RoundedCornerShape(30.dp))
                     .background(
                         brush = Brush.linearGradient(
-                            colors = listOf(PrimaryBlue, SecondaryTeal)
+                            colors = listOf(
+                                PrimaryBlue,
+                                com.example.openchatting.ui.theme.GradientMid,
+                                SecondaryTeal
+                            )
                         )
                     ),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     "💬",
-                    fontSize = 48.sp,
+                    fontSize = 56.sp,
                     color = Color.White
                 )
             }
 
             Text(
                 text = "Welcome Back!",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.headlineLarge,
                 color = textColor
             )
 
             Text(
                 text = "Sign in to your account",
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.bodyLarge,
                 color = secondaryTextColor
             )
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
             // Email Field
             ModernTextField(
@@ -132,7 +136,7 @@ fun MainLogScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Login Button with gradient
+            // Login Button with enhanced gradient
             Button(
                 onClick = {
                     viewModel.signIn { email ->
@@ -143,12 +147,12 @@ fun MainLogScreen(
                 enabled = !viewModel.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp)),
+                    .height(58.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .shadow(elevation = 12.dp, shape = RoundedCornerShape(18.dp)),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                    disabledContainerColor = Color.Gray
+                    disabledContainerColor = Color.Gray.copy(alpha = 0.5f)
                 ),
                 contentPadding = PaddingValues(0.dp)
             ) {
@@ -156,23 +160,26 @@ fun MainLogScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(PrimaryBlue, SecondaryTeal)
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    PrimaryBlue,
+                                    com.example.openchatting.ui.theme.GradientMid,
+                                    com.example.openchatting.ui.theme.AccentPurple
+                                )
                             )
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     if (viewModel.isLoading) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(26.dp),
                             color = Color.White,
-                            strokeWidth = 2.dp
+                            strokeWidth = 3.dp
                         )
                     } else {
                         Text(
                             "Sign In",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.labelLarge,
                             color = Color.White
                         )
                     }
@@ -189,13 +196,12 @@ fun MainLogScreen(
             ) {
                 Text(
                     "Don't have an account? ",
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = secondaryTextColor
                 )
                 Text(
                     "Sign Up",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelMedium,
                     color = PrimaryBlue,
                     modifier = Modifier.clickable(
                         interactionSource = remember { MutableInteractionSource() },
@@ -211,33 +217,40 @@ fun MainLogScreen(
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(1.dp)
-                        .background(Color.Gray.copy(alpha = 0.3f))
+                        .background(MaterialTheme.colorScheme.outlineVariant)
                 )
-                Text("Or", fontSize = 12.sp, color = secondaryTextColor)
+                Text(
+                    "Or",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = secondaryTextColor
+                )
                 Box(
                     modifier = Modifier
                         .weight(1f)
                         .height(1.dp)
-                        .background(Color.Gray.copy(alpha = 0.3f))
+                        .background(MaterialTheme.colorScheme.outlineVariant)
                 )
             }
 
             Spacer(modifier = Modifier.height(24.dp))
 
             // Google Button
-            Button(
+            OutlinedButton(
                 onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                    .height(58.dp),
+                shape = RoundedCornerShape(18.dp),
+                border = androidx.compose.foundation.BorderStroke(
+                    width = 1.5.dp,
+                    color = MaterialTheme.colorScheme.outline
+                ),
                 colors = ButtonDefaults.outlinedButtonColors(
                     containerColor = MaterialTheme.colorScheme.surface,
                     contentColor = textColor
@@ -248,7 +261,10 @@ fun MainLogScreen(
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically,
                     content = {
-                        Text("🔐  Continue with Google", fontSize = 14.sp, fontWeight = FontWeight.SemiBold)
+                        Text(
+                            "🔐  Continue with Google",
+                            style = MaterialTheme.typography.labelMedium
+                        )
                     }
                 )
             }

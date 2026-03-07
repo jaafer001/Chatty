@@ -44,22 +44,34 @@ fun ModernTextField(
     trailingIcon: @Composable (() -> Unit)? = null
 ) {
     val focusedBorderColor = PrimaryBlue
-    val unfocusedBorderColor = Color.Gray.copy(alpha = 0.3f)
+    val unfocusedBorderColor = MaterialTheme.colorScheme.outlineVariant
     val textColor = MaterialTheme.colorScheme.onBackground
 
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
-        placeholder = { Text(placeholder, fontSize = 14.sp) },
-        leadingIcon = icon?.let { { Icon(it, contentDescription = null, tint = PrimaryBlue, modifier = Modifier.size(20.dp)) } },
+        placeholder = {
+            Text(
+                placeholder,
+                style = MaterialTheme.typography.bodyMedium
+            )
+        },
+        leadingIcon = icon?.let { {
+            Icon(
+                it,
+                contentDescription = null,
+                tint = PrimaryBlue,
+                modifier = Modifier.size(22.dp)
+            )
+        } },
         trailingIcon = trailingIcon,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(18.dp),
         keyboardOptions = keyboardOptions,
         visualTransformation = visualTransformation,
         modifier = Modifier
             .fillMaxWidth()
-            .height(56.dp)
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+            .height(60.dp)
+            .shadow(elevation = 6.dp, shape = RoundedCornerShape(18.dp)),
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = textColor,
             unfocusedTextColor = textColor,
@@ -70,7 +82,8 @@ fun ModernTextField(
             unfocusedContainerColor = MaterialTheme.colorScheme.surface
         ),
         maxLines = 1,
-        singleLine = true
+        singleLine = true,
+        textStyle = MaterialTheme.typography.bodyLarge
     )
 }
 
@@ -81,8 +94,16 @@ fun InfoRow(label: String, value: String, textColor: Color, secondaryTextColor: 
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(label, fontSize = 13.sp, color = secondaryTextColor)
-        Text(value, fontSize = 14.sp, fontWeight = FontWeight.SemiBold, color = textColor)
+        Text(
+            label,
+            style = MaterialTheme.typography.bodySmall,
+            color = secondaryTextColor
+        )
+        Text(
+            value,
+            style = MaterialTheme.typography.titleSmall,
+            color = textColor
+        )
     }
 }
 
@@ -100,29 +121,28 @@ fun SettingItem(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+            .shadow(elevation = 6.dp, shape = RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(containerColor = cardColor),
-        shape = RoundedCornerShape(16.dp)
+        shape = RoundedCornerShape(20.dp)
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(18.dp),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     title,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleMedium,
                     color = textColor
                 )
                 Text(
                     description,
-                    fontSize = 13.sp,
+                    style = MaterialTheme.typography.bodySmall,
                     color = secondaryTextColor,
-                    modifier = Modifier.padding(top = 4.dp)
+                    modifier = Modifier.padding(top = 6.dp)
                 )
             }
             Switch(
@@ -131,7 +151,8 @@ fun SettingItem(
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = appBarTextColor,
                     checkedTrackColor = PrimaryBlue,
-                    uncheckedThumbColor = Color.Gray
+                    uncheckedThumbColor = Color.Gray,
+                    uncheckedTrackColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             )
         }
@@ -150,9 +171,10 @@ fun CustomAnimatedNavigationBar(
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp),
+            .height(85.dp),
         color = MaterialTheme.colorScheme.surface,
-        tonalElevation = 8.dp
+        tonalElevation = 10.dp,
+        shadowElevation = 8.dp
     ) {
         Row(
             modifier = Modifier
@@ -213,12 +235,12 @@ fun RowScope.NavigationItem(
             Image(
                 painter = painterResource(id = iconRes),
                 contentDescription = label,
-                modifier = Modifier.size(28.dp),
+                modifier = Modifier.size(30.dp),
                 colorFilter = ColorFilter.tint(tintColor)
             )
             Text(
                 label,
-                fontSize = 12.sp,
+                style = MaterialTheme.typography.labelSmall,
                 color = tintColor,
                 fontFamily = FontFamily.Cursive,
                 fontWeight = if (selectedItem == index) FontWeight.Bold else FontWeight.Normal

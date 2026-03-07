@@ -47,8 +47,7 @@ fun ProfileScreen(
                 title = {
                     Text(
                         "Profile",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        style = MaterialTheme.typography.headlineMedium,
                         color = appBarTextColor
                     )
                 },
@@ -76,14 +75,19 @@ fun ProfileScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Profile Picture with Gradient Background
+            // Profile Picture with Enhanced Gradient Background
             Box(
                 modifier = Modifier
-                    .size(120.dp)
+                    .size(140.dp)
                     .clip(CircleShape)
+                    .shadow(elevation = 12.dp, shape = CircleShape)
                     .background(
                         brush = Brush.linearGradient(
-                            colors = listOf(PrimaryBlue, SecondaryTeal)
+                            colors = listOf(
+                                PrimaryBlue,
+                                com.example.openchatting.ui.theme.GradientMid,
+                                SecondaryTeal
+                            )
                         )
                     ),
                 contentAlignment = Alignment.Center
@@ -92,7 +96,7 @@ fun ProfileScreen(
                     painter = painterResource(id = R.drawable.user),
                     contentDescription = "Profile Picture",
                     modifier = Modifier
-                        .size(112.dp)
+                        .size(132.dp)
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
@@ -102,15 +106,15 @@ fun ProfileScreen(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(24.dp)),
                 colors = CardDefaults.cardColors(containerColor = cardColor),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(24.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
                     InfoRow("Username", "John Doe", textColor, secondaryTextColor)
                     InfoRow("Email", "john@example.com", textColor, secondaryTextColor)
@@ -123,20 +127,19 @@ fun ProfileScreen(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(24.dp)),
                 colors = CardDefaults.cardColors(containerColor = cardColor),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(24.dp)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp)
                 ) {
                     Text(
                         "Status",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        style = MaterialTheme.typography.titleMedium,
                         color = textColor
                     )
                     Row(
@@ -145,15 +148,16 @@ fun ProfileScreen(
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(8.dp)
+                                .size(10.dp)
                                 .clip(CircleShape)
-                                .background(Color(0xFF10B981))
+                                .shadow(elevation = 2.dp, shape = CircleShape)
+                                .background(com.example.openchatting.ui.theme.SuccessGreen)
                         )
                         Text(
                             "Online",
-                            fontSize = 14.sp,
+                            style = MaterialTheme.typography.bodyMedium,
                             color = secondaryTextColor,
-                            modifier = Modifier.padding(start = 8.dp)
+                            modifier = Modifier.padding(start = 10.dp)
                         )
                     }
                 }
@@ -164,33 +168,48 @@ fun ProfileScreen(
                 onClick = { },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
-                colors = ButtonDefaults.buttonColors(containerColor = appBarColor)
+                    .height(58.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(18.dp)),
+                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                contentPadding = PaddingValues(0.dp)
             ) {
-                Text(
-                    "Edit Profile",
-                    color = appBarTextColor,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    PrimaryBlue,
+                                    com.example.openchatting.ui.theme.GradientMid
+                                )
+                            )
+                        ),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        "Edit Profile",
+                        style = MaterialTheme.typography.labelLarge,
+                        color = Color.White
+                    )
+                }
             }
 
             Button(
                 onClick = onLogout,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFFEF4444))
+                    .height(58.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(18.dp)),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = com.example.openchatting.ui.theme.ErrorRed
+                )
             ) {
                 Text(
                     "Logout",
-                    color = Color.White,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold
+                    style = MaterialTheme.typography.labelLarge,
+                    color = Color.White
                 )
             }
         }

@@ -97,8 +97,13 @@ fun ChatList(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(end = 8.dp)
-                                    .clip(RoundedCornerShape(12.dp)),
-                                placeholder = { Text("Search by name...", fontSize = 14.sp) },
+                                    .clip(RoundedCornerShape(16.dp)),
+                                placeholder = {
+                                    Text(
+                                        "Search by name...",
+                                        style = MaterialTheme.typography.bodyMedium
+                                    )
+                                },
                                 singleLine = true,
                                 colors = OutlinedTextFieldDefaults.colors(
                                     focusedContainerColor = MaterialTheme.colorScheme.surface,
@@ -112,8 +117,7 @@ fun ChatList(
                         {
                             Text(
                                 "Messages",
-                                fontSize = 28.sp,
-                                fontWeight = FontWeight.ExtraBold,
+                                style = MaterialTheme.typography.headlineMedium,
                                 color = appBarTextColor
                             )
                         }
@@ -179,26 +183,31 @@ fun ChatMessageCard(
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .height(80.dp)
-            .clip(RoundedCornerShape(16.dp))
-            .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+            .height(88.dp)
+            .clip(RoundedCornerShape(20.dp))
+            .shadow(elevation = 6.dp, shape = RoundedCornerShape(20.dp)),
         colors = CardDefaults.cardColors(containerColor = cardColor)
     ) {
         Row(
             modifier = Modifier
-                .padding(12.dp)
+                .padding(14.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // Profile Picture
+            // Profile Picture with enhanced gradient
             Box(
                 modifier = Modifier
-                    .size(56.dp)
+                    .size(60.dp)
                     .clip(CircleShape)
+                    .shadow(elevation = 4.dp, shape = CircleShape)
                     .background(
                         brush = Brush.linearGradient(
-                            colors = listOf(PrimaryBlue, SecondaryTeal)
+                            colors = listOf(
+                                PrimaryBlue,
+                                com.example.openchatting.ui.theme.GradientMid,
+                                SecondaryTeal
+                            )
                         )
                     ),
                 contentAlignment = Alignment.Center
@@ -207,7 +216,7 @@ fun ChatMessageCard(
                     painter = painterResource(id = accountDetails.profilePicture),
                     contentDescription = "Profile Picture",
                     modifier = Modifier
-                        .size(52.dp)
+                        .size(56.dp)
                         .clip(CircleShape),
                     contentScale = ContentScale.Crop
                 )
@@ -222,14 +231,13 @@ fun ChatMessageCard(
             ) {
                 Text(
                     text = accountDetails.name,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.titleMedium,
                     color = primaryTextColor,
                     maxLines = 1
                 )
                 Text(
                     text = accountDetails.lastMessage,
-                    fontSize = 13.sp,
+                    style = MaterialTheme.typography.bodySmall,
                     color = secondaryTextColor,
                     maxLines = 1
                 )
@@ -238,7 +246,7 @@ fun ChatMessageCard(
             // Time
             Text(
                 text = accountDetails.lastMessageTime,
-                fontSize = 12.sp,
+                style = MaterialTheme.typography.labelSmall,
                 color = secondaryTextColor
             )
         }

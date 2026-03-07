@@ -18,6 +18,7 @@ import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -71,17 +72,38 @@ fun SignupScreen(
         ) {
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Header
+            // Header with icon
+            Box(
+                modifier = Modifier
+                    .size(100.dp)
+                    .clip(RoundedCornerShape(25.dp))
+                    .shadow(elevation = 10.dp, shape = RoundedCornerShape(25.dp))
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(
+                                com.example.openchatting.ui.theme.AccentPurple,
+                                com.example.openchatting.ui.theme.AccentPink
+                            )
+                        )
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    "✨",
+                    fontSize = 48.sp,
+                    color = Color.White
+                )
+            }
+
             Text(
                 text = "Create Account",
-                fontSize = 32.sp,
-                fontWeight = FontWeight.ExtraBold,
+                style = MaterialTheme.typography.headlineLarge,
                 color = textColor
             )
 
             Text(
                 text = "Join us to start chatting",
-                fontSize = 16.sp,
+                style = MaterialTheme.typography.bodyLarge,
                 color = secondaryTextColor
             )
 
@@ -145,7 +167,7 @@ fun SignupScreen(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Sign Up Button
+            // Sign Up Button with enhanced gradient
             Button(
                 onClick = {
                     signUpViewModel.signUp { email ->
@@ -156,12 +178,12 @@ fun SignupScreen(
                 enabled = !signUpViewModel.isLoading,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(16.dp)),
+                    .height(58.dp)
+                    .clip(RoundedCornerShape(18.dp))
+                    .shadow(elevation = 12.dp, shape = RoundedCornerShape(18.dp)),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
-                    disabledContainerColor = Color.Gray
+                    disabledContainerColor = Color.Gray.copy(alpha = 0.5f)
                 ),
                 contentPadding = PaddingValues(0.dp)
             ) {
@@ -169,23 +191,26 @@ fun SignupScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(PrimaryBlue, SecondaryTeal)
+                            brush = Brush.horizontalGradient(
+                                colors = listOf(
+                                    com.example.openchatting.ui.theme.AccentPurple,
+                                    com.example.openchatting.ui.theme.AccentPink,
+                                    com.example.openchatting.ui.theme.AccentOrange
+                                )
                             )
                         ),
                     contentAlignment = Alignment.Center
                 ) {
                     if (signUpViewModel.isLoading) {
                         CircularProgressIndicator(
-                            modifier = Modifier.size(24.dp),
+                            modifier = Modifier.size(26.dp),
                             color = Color.White,
-                            strokeWidth = 2.dp
+                            strokeWidth = 3.dp
                         )
                     } else {
                         Text(
                             "Sign Up",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+                            style = MaterialTheme.typography.labelLarge,
                             color = Color.White
                         )
                     }
@@ -200,17 +225,16 @@ fun SignupScreen(
             ) {
                 Text(
                     "Already have an account? ",
-                    fontSize = 14.sp,
+                    style = MaterialTheme.typography.bodyMedium,
                     color = secondaryTextColor
                 )
                 Text(
                     "Log In",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
+                    style = MaterialTheme.typography.labelMedium,
                     color = PrimaryBlue,
                     modifier = Modifier.clickable(
                         indication = null,
-                        interactionSource = MutableInteractionSource(),
+                        interactionSource = remember { MutableInteractionSource() },
                         onClick = onBackToLogin
                     )
                 )

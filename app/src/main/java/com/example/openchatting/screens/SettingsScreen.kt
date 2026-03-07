@@ -44,8 +44,7 @@ fun SettingsScreen(
                 title = {
                     Text(
                         "Settings",
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.ExtraBold,
+                        style = MaterialTheme.typography.headlineMedium,
                         color = appBarTextColor
                     )
                 },
@@ -70,7 +69,7 @@ fun SettingsScreen(
                 .padding(paddingValues)
                 .verticalScroll(rememberScrollState())
                 .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(12.dp)
+            verticalArrangement = Arrangement.spacedBy(14.dp)
         ) {
             SettingItem(
                 title = "Notifications",
@@ -120,28 +119,27 @@ fun SettingsScreen(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
-                    .shadow(elevation = 4.dp, shape = RoundedCornerShape(16.dp)),
+                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(24.dp)),
                 colors = CardDefaults.cardColors(containerColor = cardColor),
-                shape = RoundedCornerShape(16.dp)
+                shape = RoundedCornerShape(24.dp)
             ) {
-                Column(modifier = Modifier.padding(16.dp)) {
+                Column(modifier = Modifier.padding(20.dp)) {
                     Text(
                         "About",
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.titleLarge,
                         color = textColor
                     )
                     Text(
                         "App Version: 1.0",
-                        fontSize = 13.sp,
+                        style = MaterialTheme.typography.bodySmall,
                         color = secondaryTextColor,
-                        modifier = Modifier.padding(top = 8.dp)
+                        modifier = Modifier.padding(top = 10.dp)
                     )
                     Text(
                         "© 2024 OpenChatting",
-                        fontSize = 13.sp,
+                        style = MaterialTheme.typography.bodySmall,
                         color = secondaryTextColor,
-                        modifier = Modifier.padding(top = 4.dp)
+                        modifier = Modifier.padding(top = 6.dp)
                     )
                 }
             }
